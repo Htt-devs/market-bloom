@@ -1,5 +1,16 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Bell, LogOut, Shield, User as UserIcon } from "lucide-react";
+import {
+  Bell,
+  LayoutDashboard,
+  LifeBuoy,
+  LogOut,
+  Package,
+  Settings as SettingsIcon,
+  Shield,
+  ShoppingCart,
+  User as UserIcon,
+  Users,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";

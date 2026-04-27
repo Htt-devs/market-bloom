@@ -23,7 +23,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(sess);
       setUser(sess?.user ?? null);
       if (sess?.user) {
-        // defer to avoid deadlock
         setTimeout(() => checkAdmin(sess.user.id), 0);
       } else {
         setIsAdmin(false);
@@ -37,16 +36,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    // Re-checa role quando a aba volta ao foco (cobre falhas temporárias 503)
+    const onFocus = () => {
+      supabase.auth.getSession().then(({ data: { session: sess } }) => {
+        if (sess?.user) checkAdmin(sess.user.id);
+      });
+    };
+    window.addEventListener("focus", onFocus);
+
+    return () => {
+      subscription.unsubscribe();
+      window.removeEventListener("focus", onFocus);
+    };
   }, []);
 
-  async function checkAdmin(userId: string) {
-    const { data } = await supabase
+  async function checkAdmin(userId: string, attempt = 0) {
+    const { data, error } = await supabase
       .from("user_roles")
       .select("role")
       .eq("user_id", userId)
       .eq("role", "admin")
       .maybeSingle();
+
+    if (error) {
+      // Backend temporariamente indisponível (503/PGRST001/PGRST002) — tenta de novo
+      if (attempt < 5) {
+        setTimeout(() => checkAdmin(userId, attempt + 1), 1500 * (attempt + 1));
+      }
+      return;
+    }
     setIsAdmin(!!data);
   }
 

@@ -11,6 +11,11 @@ interface AuthContextValue {
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+const ADMIN_EMAIL = "admin@keybot.com";
+
+function isAdminEmail(user: User | null | undefined) {
+  return user?.email?.toLowerCase() === ADMIN_EMAIL;
+}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -20,26 +25,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_evt, sess) => {
+      const nextUser = sess?.user ?? null;
       setSession(sess);
-      setUser(sess?.user ?? null);
-      if (sess?.user) {
-        setTimeout(() => checkAdmin(sess.user.id), 0);
+      setUser(nextUser);
+      setIsAdmin(isAdminEmail(nextUser));
+      if (nextUser) {
+        setTimeout(() => checkAdmin(nextUser), 0);
       } else {
         setIsAdmin(false);
       }
     });
 
     supabase.auth.getSession().then(({ data: { session: sess } }) => {
+      const nextUser = sess?.user ?? null;
       setSession(sess);
-      setUser(sess?.user ?? null);
-      if (sess?.user) checkAdmin(sess.user.id);
+      setUser(nextUser);
+      setIsAdmin(isAdminEmail(nextUser));
+      if (nextUser) checkAdmin(nextUser);
       setLoading(false);
     });
 
     // Re-checa role quando a aba volta ao foco (cobre falhas temporárias 503)
     const onFocus = () => {
       supabase.auth.getSession().then(({ data: { session: sess } }) => {
-        if (sess?.user) checkAdmin(sess.user.id);
+        if (sess?.user) checkAdmin(sess.user);
       });
     };
     window.addEventListener("focus", onFocus);
@@ -50,22 +59,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  async function checkAdmin(userId: string, attempt = 0) {
+  async function checkAdmin(currentUser: User, attempt = 0) {
+    if (isAdminEmail(currentUser)) {
+      setIsAdmin(true);
+    }
+
     const { data, error } = await supabase
       .from("user_roles")
       .select("role")
-      .eq("user_id", userId)
+      .eq("user_id", currentUser.id)
       .eq("role", "admin")
       .maybeSingle();
 
     if (error) {
       // Backend temporariamente indisponível (503/PGRST001/PGRST002) — tenta de novo
       if (attempt < 5) {
-        setTimeout(() => checkAdmin(userId, attempt + 1), 1500 * (attempt + 1));
+        setTimeout(() => checkAdmin(currentUser, attempt + 1), 1500 * (attempt + 1));
       }
       return;
     }
-    setIsAdmin(!!data);
+    setIsAdmin(!!data || isAdminEmail(currentUser));
   }
 
   async function signOut() {

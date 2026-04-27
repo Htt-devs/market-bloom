@@ -25,7 +25,7 @@ function AuthPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (user) navigate({ to: "/dashboard" });
+    if (user) navigate({ to: "/catalog" });
   }, [user, navigate]);
 
   async function handleSubmit(e: FormEvent) {
@@ -37,7 +37,7 @@ function AuthPage() {
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/dashboard`,
+            emailRedirectTo: `${window.location.origin}/catalog`,
             data: { display_name: displayName || email.split("@")[0] },
           },
         });
@@ -48,7 +48,7 @@ function AuthPage() {
         if (error) throw error;
         toast.success("Bem-vindo de volta!");
       }
-      navigate({ to: "/dashboard" });
+      navigate({ to: "/catalog" });
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Erro inesperado";
       toast.error(

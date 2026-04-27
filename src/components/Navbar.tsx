@@ -1,5 +1,16 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Bell, LogOut, Shield, User as UserIcon } from "lucide-react";
+import {
+  Bell,
+  LayoutDashboard,
+  LifeBuoy,
+  LogOut,
+  Package,
+  Settings as SettingsIcon,
+  Shield,
+  ShoppingCart,
+  User as UserIcon,
+  Users,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -93,17 +104,46 @@ export function Navbar() {
                     <UserIcon className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuContent align="end" className="w-64">
                   <DropdownMenuLabel className="truncate">{user.email}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onSelect={() => navigate({ to: "/dashboard" })}>
-                    Minha conta
+                    <UserIcon className="mr-2 h-4 w-4" /> Minha conta
                   </DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => navigate({ to: "/catalog" })}>
+                    <Package className="mr-2 h-4 w-4" /> Catálogo
+                  </DropdownMenuItem>
+
                   {isAdmin && (
-                    <DropdownMenuItem onSelect={() => navigate({ to: "/admin" })}>
-                      <Shield className="mr-2 h-4 w-4" /> Painel Admin
-                    </DropdownMenuItem>
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuLabel className="flex items-center gap-1.5 text-xs uppercase tracking-wide text-primary">
+                        <Shield className="h-3.5 w-3.5" /> Administração
+                      </DropdownMenuLabel>
+                      <DropdownMenuItem onSelect={() => navigate({ to: "/admin" })}>
+                        <LayoutDashboard className="mr-2 h-4 w-4" /> Dashboard
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onSelect={() => navigate({ to: "/admin/products" })}>
+                        <Package className="mr-2 h-4 w-4" /> Produtos
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onSelect={() => navigate({ to: "/admin/orders" })}>
+                        <ShoppingCart className="mr-2 h-4 w-4" /> Pedidos
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onSelect={() => navigate({ to: "/admin/users" })}>
+                        <Users className="mr-2 h-4 w-4" /> Usuários
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onSelect={() => navigate({ to: "/admin/notifications" })}>
+                        <Bell className="mr-2 h-4 w-4" /> Notificações
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onSelect={() => navigate({ to: "/admin/support" })}>
+                        <LifeBuoy className="mr-2 h-4 w-4" /> Suporte
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onSelect={() => navigate({ to: "/admin/settings" })}>
+                        <SettingsIcon className="mr-2 h-4 w-4" /> Configurações
+                      </DropdownMenuItem>
+                    </>
                   )}
+
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onSelect={async () => {

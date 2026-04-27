@@ -87,15 +87,30 @@ export function Navbar() {
               </Popover>
 
               {isAdmin && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="hidden md:inline-flex border-primary/40 text-primary hover:bg-primary/10"
-                  onClick={() => navigate({ to: "/admin" })}
-                >
-                  <Shield className="mr-1.5 h-4 w-4" />
-                  Admin
-                </Button>
+                <>
+                  {/* Ícone dedicado (sempre visível, inclusive no mobile) */}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="relative text-primary hover:bg-primary/10"
+                    onClick={() => navigate({ to: "/admin" })}
+                    aria-label="Painel do Admin"
+                    title="Painel do Admin"
+                  >
+                    <Shield className="h-4 w-4" />
+                    <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-primary shadow-glow" />
+                  </Button>
+                  {/* Botão com texto no desktop */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="hidden md:inline-flex border-primary/40 text-primary hover:bg-primary/10"
+                    onClick={() => navigate({ to: "/admin" })}
+                  >
+                    <Shield className="mr-1.5 h-4 w-4" />
+                    Admin
+                  </Button>
+                </>
               )}
 
               <DropdownMenu>

@@ -35,6 +35,8 @@ export function Navbar() {
   const { user, isAdmin, signOut } = useAuth();
   const navigate = useNavigate();
   const [discordUrl, setDiscordUrl] = useState("https://discord.gg/");
+  const isAdminEmail = user?.email?.toLowerCase() === "admin@keybot.com";
+  const showAdmin = isAdmin || isAdminEmail;
 
   useEffect(() => {
     supabase
@@ -129,7 +131,16 @@ export function Navbar() {
                     <Package className="mr-2 h-4 w-4" /> Catálogo
                   </DropdownMenuItem>
 
-                  {isAdmin && (
+                  {isAdminEmail && (
+                    <DropdownMenuItem
+                      onSelect={() => navigate({ to: "/admin" })}
+                      className="text-primary focus:text-primary"
+                    >
+                      <Shield className="mr-2 h-4 w-4" /> Administração
+                    </DropdownMenuItem>
+                  )}
+
+                  {showAdmin && (
                     <>
                       <DropdownMenuSeparator />
                       <DropdownMenuLabel className="flex items-center gap-1.5 text-xs uppercase tracking-wide text-primary">

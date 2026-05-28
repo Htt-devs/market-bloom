@@ -39,20 +39,24 @@ function AdminLayout() {
   }, [user, isAdmin, loading, navigate]);
 
   if (loading || !user || !isAdmin) {
-    return <div className="min-h-screen flex items-center justify-center text-muted-foreground">Verificando acesso...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center text-muted-foreground">
+        Verificando acesso...
+      </div>
+    );
   }
 
   return (
     <div className="min-h-screen flex">
       {/* Sidebar */}
-      <aside className="hidden md:flex w-64 flex-col border-r border-sidebar-border bg-sidebar">
-        <div className="flex h-16 items-center gap-2 border-b border-sidebar-border px-5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-primary shadow-glow">
-            <span className="font-display font-bold text-primary-foreground">Z</span>
+      <aside className="hidden md:flex w-64 flex-col border-r border-white/5 bg-sidebar">
+        <div className="flex h-16 items-center gap-2.5 border-b border-white/5 px-5">
+          <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-primary shadow-indigo">
+            <span className="font-display font-bold text-primary-foreground italic">S</span>
           </div>
           <div>
-            <div className="font-display font-bold leading-none">ZXMAX</div>
-            <div className="text-xs text-muted-foreground">Admin</div>
+            <div className="font-display font-bold leading-none italic">System Shop</div>
+            <div className="text-[10px] uppercase tracking-wider text-primary mt-0.5">Admin</div>
           </div>
         </div>
 
@@ -64,10 +68,10 @@ function AdminLayout() {
               <Link
                 key={m.to}
                 to={m.to}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${
+                className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all ${
                   active
-                    ? "bg-primary/15 text-primary"
-                    : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                    ? "bg-primary/15 text-primary shadow-indigo"
+                    : "text-sidebar-foreground/70 hover:bg-white/5 hover:text-sidebar-foreground"
                 }`}
               >
                 <Icon className="h-4 w-4" />
@@ -77,10 +81,10 @@ function AdminLayout() {
           })}
         </nav>
 
-        <div className="border-t border-sidebar-border p-3 space-y-1">
+        <div className="border-t border-white/5 p-3 space-y-1">
           <Link
             to="/"
-            className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors"
+            className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-sidebar-foreground/70 hover:bg-white/5 hover:text-sidebar-foreground transition-colors"
           >
             <ArrowLeft className="h-4 w-4" /> Voltar ao site
           </Link>
@@ -89,7 +93,7 @@ function AdminLayout() {
               await signOut();
               navigate({ to: "/" });
             }}
-            className="w-full flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors"
+            className="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-sidebar-foreground/70 hover:bg-white/5 hover:text-sidebar-foreground transition-colors"
           >
             <LogOut className="h-4 w-4" /> Sair
           </button>
@@ -97,12 +101,12 @@ function AdminLayout() {
       </aside>
 
       {/* Mobile top bar */}
-      <div className="md:hidden fixed top-0 inset-x-0 z-30 glass border-b border-border h-14 flex items-center justify-between px-4">
+      <div className="md:hidden fixed top-0 inset-x-0 z-30 glass border-b border-white/5 h-14 flex items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-gradient-primary">
-            <span className="font-display text-xs font-bold text-primary-foreground">Z</span>
+          <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-gradient-primary">
+            <span className="font-display text-xs font-bold text-primary-foreground italic">S</span>
           </div>
-          <span className="font-display font-bold text-sm">ZXMAX Admin</span>
+          <span className="font-display font-bold text-sm italic">System Shop Admin</span>
         </Link>
         <button
           onClick={async () => {
@@ -117,15 +121,17 @@ function AdminLayout() {
 
       <main className="flex-1 md:pt-0 pt-14 overflow-x-hidden">
         {/* Mobile menu */}
-        <div className="md:hidden flex gap-1 overflow-x-auto p-3 border-b border-border bg-card/40">
+        <div className="md:hidden flex gap-1 overflow-x-auto p-3 border-b border-white/5 bg-card/40">
           {menu.map((m) => {
             const active = m.exact ? location.pathname === m.to : location.pathname.startsWith(m.to);
             return (
               <Link
                 key={m.to}
                 to={m.to}
-                className={`whitespace-nowrap rounded-md px-3 py-1.5 text-xs ${
-                  active ? "bg-primary text-primary-foreground" : "text-muted-foreground bg-secondary"
+                className={`whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-semibold ${
+                  active
+                    ? "bg-gradient-primary text-primary-foreground shadow-indigo"
+                    : "text-muted-foreground bg-secondary"
                 }`}
               >
                 {m.label}

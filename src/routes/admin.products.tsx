@@ -29,6 +29,7 @@ interface Product {
   variants: { name: string }[] | null | unknown;
   stock: number | null;
   active: boolean;
+  category: string | null;
 }
 
 interface FormState {
@@ -40,6 +41,7 @@ interface FormState {
   variantsText: string;
   stock: string;
   active: boolean;
+  category: string;
 }
 
 const emptyForm: FormState = {
@@ -50,6 +52,7 @@ const emptyForm: FormState = {
   variantsText: "",
   stock: "",
   active: true,
+  category: "",
 };
 
 function AdminProducts() {
@@ -86,6 +89,7 @@ function AdminProducts() {
       variantsText: variants.map((v) => v.name).join(", "),
       stock: p.stock != null ? String(p.stock) : "",
       active: p.active,
+      category: p.category ?? "",
     });
     setOpen(true);
   }
@@ -125,6 +129,7 @@ function AdminProducts() {
         variants,
         stock: form.stock ? Number(form.stock) : null,
         active: form.active,
+        category: form.category || null,
       };
 
       if (form.id) {
@@ -262,6 +267,16 @@ function AdminProducts() {
             </div>
 
             <div className="space-y-1.5">
+              <Label htmlFor="p-cat">Categoria</Label>
+              <Input
+                id="p-cat"
+                placeholder="Ex: Streaming, Games, Software"
+                value={form.category}
+                onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
+              />
+            </div>
+
+            <div className="space-y-1.5">
               <Label htmlFor="p-desc">Descrição</Label>
               <Textarea
                 id="p-desc"
@@ -270,6 +285,7 @@ function AdminProducts() {
                 onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
               />
             </div>
+
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">

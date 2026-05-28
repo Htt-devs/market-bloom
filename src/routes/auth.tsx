@@ -42,7 +42,7 @@ function AuthPage() {
           },
         });
         if (error) throw error;
-        toast.success("Conta criada! Você já está logado.");
+        toast.success("Conta criada!");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
@@ -64,7 +64,7 @@ function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-hero pointer-events-none" />
       <div className="relative w-full max-w-md">
         <Link
@@ -74,13 +74,13 @@ function AuthPage() {
           <ArrowLeft className="h-3.5 w-3.5" /> Voltar
         </Link>
 
-        <div className="rounded-2xl border border-border bg-gradient-card p-8 shadow-elegant">
+        <div className="rounded-3xl glass-card border border-white/10 p-8 shadow-elegant">
           <div className="text-center mb-6">
-            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-primary shadow-glow">
-              <span className="font-display text-xl font-bold text-primary-foreground">Z</span>
+            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-primary shadow-glow">
+              <span className="font-display text-xl font-bold text-primary-foreground italic">S</span>
             </div>
-            <h1 className="font-display text-2xl font-bold">
-              {mode === "signup" ? "Criar conta" : "Entrar no ZXMAX"}
+            <h1 className="font-display text-2xl font-extrabold italic">
+              {mode === "signup" ? "Criar conta" : "Entrar na System Shop"}
             </h1>
             <p className="mt-1 text-sm text-muted-foreground">
               {mode === "signup" ? "Comece a comprar agora mesmo." : "Acesse sua conta para continuar."}
@@ -97,6 +97,7 @@ function AuthPage() {
                   onChange={(e) => setDisplayName(e.target.value)}
                   placeholder="Como devemos te chamar?"
                   autoComplete="name"
+                  className="rounded-xl h-11"
                 />
               </div>
             )}
@@ -110,6 +111,7 @@ function AuthPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="voce@email.com"
                 autoComplete="email"
+                className="rounded-xl h-11"
               />
             </div>
             <div className="space-y-1.5">
@@ -123,13 +125,14 @@ function AuthPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Mínimo 6 caracteres"
                 autoComplete={mode === "signup" ? "new-password" : "current-password"}
+                className="rounded-xl h-11"
               />
             </div>
 
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-glow"
+              className="w-full rounded-2xl h-11 bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-glow font-semibold"
             >
               {loading ? "Aguarde..." : mode === "signup" ? "Criar conta" : "Entrar"}
             </Button>

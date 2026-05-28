@@ -35,38 +35,79 @@ export function Navbar() {
   const { user, isAdmin, signOut } = useAuth();
   const navigate = useNavigate();
   const [discordUrl, setDiscordUrl] = useState("https://discord.gg/");
+  const [bellText, setBellText] = useState<string>("Bem-vindo à System Shop!");
+  const [brand, setBrand] = useState("System Shop");
   const isAdminEmail = user?.email?.toLowerCase() === "admin@keybot.com";
   const showAdmin = isAdmin || isAdminEmail;
 
   useEffect(() => {
     supabase
       .from("site_settings")
-      .select("discord_url")
+      .select("discord_url, bell_text, brand_name")
       .eq("id", 1)
       .maybeSingle()
       .then(({ data }) => {
         if (data?.discord_url) setDiscordUrl(data.discord_url);
+        if (data?.bell_text) setBellText(data.bell_text);
+        if (data?.brand_name) setBrand(data.brand_name);
       });
   }, []);
 
+  const [brandFirst, ...brandRest] = brand.split(" ");
+  const brandSecond = brandRest.join(" ");
+
   return (
-    <header className="sticky top-0 z-40 glass border-b border-border">
+    <header className="sticky top-0 z-40 glass border-b border-white/5">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link to="/" className="flex items-center gap-2 group">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-primary shadow-glow transition-transform group-hover:scale-105">
-            <span className="font-display text-lg font-bold text-primary-foreground">Z</span>
+        <Link to="/" className="flex items-center gap-2.5 group">
+          <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-primary shadow-indigo transition-transform group-hover:scale-105">
+            <span className="font-display text-lg font-bold text-primary-foreground italic">S</span>
+            <div className="absolute -inset-0.5 rounded-2xl bg-gradient-primary opacity-30 blur-md -z-10" />
           </div>
-          <span className="font-display text-xl font-bold tracking-tight">
-            ZX<span className="text-gradient">MAX</span>
+          <span className="font-display text-lg font-bold tracking-tight">
+            {brandFirst}
+            {brandSecond && <span className="text-gradient italic"> {brandSecond}</span>}
           </span>
         </Link>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
+          {/* Sininho — sempre visível */}
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative rounded-xl text-muted-foreground hover:text-foreground hover:bg-white/5"
+                aria-label="Notificações"
+              >
+                <Bell className="h-4 w-4" />
+                {bellText && (
+                  <span className="absolute top-2 right-2 h-1.5 w-1.5 rounded-full bg-primary shadow-glow animate-pulse" />
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent align="end" className="w-80 rounded-2xl border-white/10 glass-card">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/15 text-primary">
+                    <Bell className="h-3.5 w-3.5" />
+                  </div>
+                  <h4 className="font-display font-semibold">Avisos</h4>
+                </div>
+                {bellText ? (
+                  <p className="text-sm text-muted-foreground leading-relaxed pl-9">{bellText}</p>
+                ) : (
+                  <p className="text-sm text-muted-foreground pl-9">Sem avisos no momento.</p>
+                )}
+              </div>
+            </PopoverContent>
+          </Popover>
+
           <a
             href={discordUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+            className="flex h-9 w-9 items-center justify-center rounded-xl text-muted-foreground transition-colors hover:bg-[#5865F2]/10 hover:text-[#5865F2]"
             aria-label="Discord"
           >
             <DiscordIcon className="h-4 w-4" />
@@ -74,54 +115,32 @@ export function Navbar() {
 
           {user ? (
             <>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="ghost" size="icon" className="relative" aria-label="Notificações">
-                    <Bell className="h-4 w-4" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent align="end" className="w-80">
-                  <div className="space-y-2">
-                    <h4 className="font-display font-semibold">Notificações</h4>
-                    <p className="text-sm text-muted-foreground">Você não tem notificações no momento.</p>
-                  </div>
-                </PopoverContent>
-              </Popover>
-
-              {isAdmin && (
-                <>
-                  {/* Ícone dedicado (sempre visível, inclusive no mobile) */}
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="relative text-primary hover:bg-primary/10"
-                    onClick={() => navigate({ to: "/admin" })}
-                    aria-label="Painel do Admin"
-                    title="Painel do Admin"
-                  >
-                    <Shield className="h-4 w-4" />
-                    <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-primary shadow-glow" />
-                  </Button>
-                  {/* Botão com texto no desktop */}
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="hidden md:inline-flex border-primary/40 text-primary hover:bg-primary/10"
-                    onClick={() => navigate({ to: "/admin" })}
-                  >
-                    <Shield className="mr-1.5 h-4 w-4" />
-                    Admin
-                  </Button>
-                </>
+              {showAdmin && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="relative rounded-xl text-primary hover:bg-primary/10"
+                  onClick={() => navigate({ to: "/admin" })}
+                  aria-label="Painel do Admin"
+                  title="Painel do Admin"
+                >
+                  <Shield className="h-4 w-4" />
+                  <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-primary shadow-glow" />
+                </Button>
               )}
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" aria-label="Conta">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="rounded-xl hover:bg-white/5"
+                    aria-label="Conta"
+                  >
                     <UserIcon className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-64">
+                <DropdownMenuContent align="end" className="w-64 rounded-2xl border-white/10 glass-card">
                   <DropdownMenuLabel className="truncate">{user.email}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onSelect={() => navigate({ to: "/dashboard" })}>
@@ -130,15 +149,6 @@ export function Navbar() {
                   <DropdownMenuItem onSelect={() => navigate({ to: "/catalog" })}>
                     <Package className="mr-2 h-4 w-4" /> Catálogo
                   </DropdownMenuItem>
-
-                  {isAdminEmail && (
-                    <DropdownMenuItem
-                      onSelect={() => navigate({ to: "/admin" })}
-                      className="text-primary focus:text-primary"
-                    >
-                      <Shield className="mr-2 h-4 w-4" /> Administração
-                    </DropdownMenuItem>
-                  )}
 
                   {showAdmin && (
                     <>
@@ -183,18 +193,15 @@ export function Navbar() {
               </DropdownMenu>
             </>
           ) : (
-            <>
-              <Button variant="ghost" size="sm" onClick={() => navigate({ to: "/auth", search: { mode: "login" } })}>
-                Entrar
-              </Button>
-              <Button
-                size="sm"
-                className="bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-glow"
-                onClick={() => navigate({ to: "/auth", search: { mode: "signup" } })}
-              >
-                Cadastrar
-              </Button>
-            </>
+            <Button
+              size="sm"
+              onClick={() => navigate({ to: "/auth", search: { mode: "login" } })}
+              className="rounded-xl bg-[#5865F2] text-white hover:bg-[#4752c4] shadow-indigo gap-2"
+            >
+              <DiscordIcon className="h-4 w-4" />
+              <span className="hidden sm:inline">Login com Discord</span>
+              <span className="sm:hidden">Entrar</span>
+            </Button>
           )}
         </div>
       </div>

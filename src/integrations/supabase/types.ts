@@ -18,9 +18,13 @@ export type Database = {
         Row: {
           amount: number
           created_at: string
+          customer_email: string | null
+          evopay_id: string | null
           id: string
           notes: string | null
+          pix_code: string | null
           pix_key: string | null
+          pix_qr: string | null
           product_id: string
           product_name: string
           status: Database["public"]["Enums"]["order_status"]
@@ -31,9 +35,13 @@ export type Database = {
         Insert: {
           amount: number
           created_at?: string
+          customer_email?: string | null
+          evopay_id?: string | null
           id?: string
           notes?: string | null
+          pix_code?: string | null
           pix_key?: string | null
+          pix_qr?: string | null
           product_id: string
           product_name: string
           status?: Database["public"]["Enums"]["order_status"]
@@ -44,9 +52,13 @@ export type Database = {
         Update: {
           amount?: number
           created_at?: string
+          customer_email?: string | null
+          evopay_id?: string | null
           id?: string
           notes?: string | null
+          pix_code?: string | null
           pix_key?: string | null
+          pix_qr?: string | null
           product_id?: string
           product_name?: string
           status?: Database["public"]["Enums"]["order_status"]
@@ -67,6 +79,7 @@ export type Database = {
       products: {
         Row: {
           active: boolean
+          category: string | null
           created_at: string
           description: string | null
           id: string
@@ -79,6 +92,7 @@ export type Database = {
         }
         Insert: {
           active?: boolean
+          category?: string | null
           created_at?: string
           description?: string | null
           id?: string
@@ -91,6 +105,7 @@ export type Database = {
         }
         Update: {
           active?: boolean
+          category?: string | null
           created_at?: string
           description?: string | null
           id?: string
@@ -133,8 +148,11 @@ export type Database = {
       site_settings: {
         Row: {
           banner_url: string | null
+          bell_text: string | null
+          brand_name: string | null
           discord_name: string | null
           discord_url: string | null
+          evopay_token: string | null
           id: number
           logo_url: string | null
           pix_key: string | null
@@ -142,8 +160,11 @@ export type Database = {
         }
         Insert: {
           banner_url?: string | null
+          bell_text?: string | null
+          brand_name?: string | null
           discord_name?: string | null
           discord_url?: string | null
+          evopay_token?: string | null
           id?: number
           logo_url?: string | null
           pix_key?: string | null
@@ -151,8 +172,11 @@ export type Database = {
         }
         Update: {
           banner_url?: string | null
+          bell_text?: string | null
+          brand_name?: string | null
           discord_name?: string | null
           discord_url?: string | null
+          evopay_token?: string | null
           id?: number
           logo_url?: string | null
           pix_key?: string | null

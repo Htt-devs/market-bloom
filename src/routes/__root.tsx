@@ -15,7 +15,7 @@ function NotFoundComponent() {
         </p>
         <a
           href="/"
-          className="mt-6 inline-flex items-center justify-center rounded-md bg-gradient-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-glow transition-opacity hover:opacity-90"
+          className="mt-6 inline-flex items-center justify-center rounded-2xl bg-gradient-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-glow transition-opacity hover:opacity-90"
         >
           Voltar ao início
         </a>
@@ -29,16 +29,16 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "ZXMAX — Marketplace digital premium" },
+      { title: "System Shop — Loja digital premium" },
       {
         name: "description",
         content:
-          "ZXMAX é o marketplace de produtos digitais com checkout via Pix, entregas manuais por chat e painel admin completo.",
+          "System Shop: produtos digitais com entrega automática, checkout PIX via EvoPay e suporte 24/7.",
       },
-      { property: "og:title", content: "ZXMAX — Marketplace digital premium" },
+      { property: "og:title", content: "System Shop — Loja digital premium" },
       {
         property: "og:description",
-        content: "Compre produtos digitais com Pix. Entrega rápida e suporte por chat.",
+        content: "Loja de produtos digitais com entrega automática e PIX instantâneo.",
       },
       { property: "og:type", content: "website" },
     ],
@@ -48,7 +48,7 @@ export const Route = createRootRoute({
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500;1,700;1,800&family=Inter:wght@400;500;600;700&display=swap",
       },
     ],
   }),
